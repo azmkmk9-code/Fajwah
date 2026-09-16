@@ -198,6 +198,7 @@
 </div>
 
 <script>
+    // أدخل مفتاح الـ API الخاص بك بين العلامتين أدناه إذا واجهت مشكلة في المفتاح الحالي
     const GEMINI_API_KEY = "AQ.Ab8RN6IeMifrbAMlUq9X" + "6MaDgKb4msJsF6I2lcH__DABM9vFUg";
 
     async function analyzeNews() {
@@ -236,7 +237,7 @@
 
         try {
             const cleanKey = GEMINI_API_KEY.trim();
-            const endpointUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+            const endpointUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent';
 
             const response = await fetch(endpointUrl, {
                 method: 'POST',
