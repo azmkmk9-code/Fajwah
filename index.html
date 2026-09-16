@@ -198,7 +198,7 @@
 </div>
 
 <script>
-    const GEMINI_API_KEY = "AQ.Ab8RN6IeMifrbAMlUq9X6MaDgKb4" + "msJsF6I2lcH__DABM9vFUg";
+    const GEMINI_API_KEY = "AQ.Ab8RN6IeMifrbAMlUq9X" + "6MaDgKb4msJsF6I2lcH__DABM9vFUg";
 
     async function analyzeNews() {
         const newsInput = document.getElementById('newsInput').value.trim();
@@ -236,18 +236,14 @@
 
         try {
             const cleanKey = GEMINI_API_KEY.trim();
-            const headers = { 'Content-Type': 'application/json' };
-            let endpointUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
-
-            if (cleanKey.startsWith('AQ')) {
-                headers['Authorization'] = `Bearer ${cleanKey}`;
-            } else {
-                endpointUrl += `?key=${cleanKey}`;
-            }
+            const endpointUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
             const response = await fetch(endpointUrl, {
                 method: 'POST',
-                headers: headers,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': cleanKey
+                },
                 body: JSON.stringify({ contents: [{ parts: [{ text: mediaPrompt }] }] })
             });
 
@@ -274,4 +270,4 @@
 </script>
 
 </body>
-</html> 
+</html>
