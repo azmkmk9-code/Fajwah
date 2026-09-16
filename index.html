@@ -1,106 +1,281 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>منصة فجوة | Fajwah AI</title>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
-    body { background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
-    .container { max-width: 750px; width: 100%; margin-top: 30px; }
-    .header { text-align: center; margin-bottom: 30px; }
-    h1 { color: #38bdf8; font-size: 32px; margin-bottom: 8px; }
-    p.subtitle { color: #94a3b8; font-size: 16px; margin: 0; }
-    .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); }
-    label { display: block; font-weight: 600; margin-bottom: 10px; color: #e2e8f0; }
-    textarea { width: 100%; height: 160px; background: #0f172a; border: 1px solid #475569; border-radius: 12px; color: #fff; padding: 16px; font-size: 16px; resize: vertical; outline: none; transition: 0.2s; }
-    textarea:focus { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
-    button { width: 100%; background: linear-gradient(135deg, #0284c7, #2563eb); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 16px; transition: 0.2s; }
-    button:hover { opacity: 0.95; transform: translateY(-1px); }
-    button:disabled { background: #475569; cursor: not-allowed; transform: none; }
-    .result-title { font-weight: 700; margin-top: 24px; color: #38bdf8; display: block; }
-    .result-box { margin-top: 10px; background: #0f172a; border-radius: 12px; padding: 20px; border: 1px solid #334155; min-height: 120px; white-space: pre-wrap; line-height: 1.8; color: #cbd5e1; font-size: 15px; }
-    .loading { text-align: center; color: #38bdf8; font-weight: 600; animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة فجوة | استخراج الفجوات الإعلامية وصياغة الأخبار</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --accent-color: #238636;
+            --accent-hover: #2ea043;
+            --text-main: #c9d1d9;
+            --text-bright: #ffffff;
+            --primary: #58a6ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--text-bright);
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: #8b949e;
+            font-size: 1.05rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--text-bright);
+        }
+
+        input[type="text"], input[type="password"], textarea {
+            width: 100%;
+            padding: 14px;
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-bright);
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        button:disabled {
+            background-color: #21262d;
+            color: #8b949e;
+            cursor: not-allowed;
+        }
+
+        .results-card {
+            display: none;
+        }
+
+        .results-content {
+            color: var(--text-main);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .results-content h1, .results-content h2, .results-content h3 {
+            color: var(--text-bright);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .results-content strong {
+            color: var(--primary);
+        }
+
+        .loading {
+            text-align: center;
+            display: none;
+            padding: 20px;
+            color: #8b949e;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>منصة فجوة (Fajwah AI)</h1>
-      <p class="subtitle">استكشاف الفجوات الإعلامية والانفراد بالمحتوى الرقمي</p>
-    </div>
-    
+
+<div class="container">
+    <header>
+        <h1>منصة فجوة 🗞️</h1>
+        <p>استخراج الفجوات الإعلامية وصياغة أخبار صحفية منفردة وجاهزة للنشر</p>
+    </header>
+
     <div class="card">
-      <label for="userInput">أدخل الخبر أو المحتوى الإعلامي لاستخراج الفجوات:</label>
-      <textarea id="userInput" placeholder="ألصق نص الخبر أو التصريح الإعلامي هنا..."></textarea>
-      <button id="sendBtn" onclick="analyzeContent()">استخراج الفجوة الإعلامية</button>
-      
-      <span class="result-title">تقرير الفجوة والزوايا المفقودة:</span>
-      <div id="output" class="result-box">في انتظار إدخال الخبر لبدء استخراج الفجوات...</div>
+        <div class="form-group">
+            <label for="apiKey">مفتاح Gemini API Key:</label>
+            <input type="password" id="apiKey" placeholder="أدخل مفتاح الـ API الخاص بك..." />
+        </div>
+
+        <div class="form-group">
+            <label for="newsInput">نص الخبر المراد تحليله واستخراج الانفراد منه:</label>
+            <textarea id="newsInput" rows="6" placeholder="ضع نص الخبر هنا..."></textarea>
+        </div>
+
+        <button id="submitBtn" onclick="analyzeNews()">استخراج الفجوة وصياغة الخبر الجديد</button>
     </div>
-  </div>
 
-  <script>
-    const WORKER_URL = "https://fajwah-ai.azm24495.workers.dev";
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>جاري تحليل الخبر واكتشاف الفجوات وصياغة التقرير الجديد...</p>
+    </div>
 
-    async function analyzeContent() {
-      const input = document.getElementById("userInput").value.trim();
-      const output = document.getElementById("output");
-      const btn = document.getElementById("sendBtn");
+    <div class="card results-card" id="resultsCard">
+        <h2 style="color: var(--text-bright); margin-bottom: 15px;">النتيجة والخبر الجديد الجاهز للنشر:</h2>
+        <div class="results-content" id="resultContent"></div>
+    </div>
+</div>
 
-      if (!input) {
-        alert("الرجاء إدخال نص الخبر أولاً!");
-        return;
-      }
-
-      output.innerHTML = '<div class="loading">جاري التفتيش عن الفجوات الإعلامية والزوايا المفقودة... ⏳</div>';
-      btn.disabled = true;
-
-      const mediaPrompt = `أنت خبير ومحلل إعلامي متخصص في رصد "الفجوات الإعلامية". 
-مهمتك ليست إعادة شرح النص أو تحليل بلاغته، بل استخراج ما أغفلته وسائل الإعلام وتزويد الباحث/صانع المحتوى بزوايا انفراد جاهزة للنشر.
-
-قم بتحليل النص التالي واستخرج ما يلي مباشرة:
-
-1. 🎯 **الفجوة الإعلامية (ما الذي أغفلته وسائل الإعلام؟):**
-- الزوايا الغائبة (سياقية، تاريخية، أبعاد سياسية أو اقتصادية أو اجتماعية لم تطرح).
-- النقاط التفصيلية التي تتجاهل التغطيات السائدة التركيز عليها.
-
-2. ❓ **الأسئلة المعلقة:**
-- الأسئلة الجوهرية التي يطرحها المتابع بعد قراءة الخبر ولم تجب عنها التغطية.
-
-3. 💡 **زوايا معالجة مقترحة للانفراد (Content Angles):**
-- 3 زوايا صحفية أو أفكار صانع محتوى متميزة تغطي هذه الفجوة وتصنع فارقاً عند نشرها.
-
-4. ✍️ **عناوين مقترحة للنشر:**
-- 3 عناوين جذابة وقوية تبدأ من الفجوة الإعلامية مباشرة لتغطية الموضوع من منظور جديد.
-
-النص المراد تحليله:
-` + input;
-
-      try {
-        const response = await fetch(WORKER_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt: mediaPrompt })
-        });
-
-        const data = await response.json();
-        
-        if (data.candidates && data.candidates[0].content.parts[0].text) {
-          output.innerText = data.candidates[0].content.parts[0].text;
-        } else if (data.error) {
-          output.innerText = "حدث خطأ أثناء التحليل: " + (data.error.message || JSON.stringify(data.error));
-        } else {
-          output.innerText = "لم نتمكن من تلقي إجابة، حاول مجدداً.";
+<script>
+    // استرجاع مفتاح الـ API المحفوظ إن وجد
+    document.addEventListener("DOMContentLoaded", () => {
+        const savedKey = localStorage.getItem('gemini_api_key');
+        if (savedKey) {
+            document.getElementById('apiKey').value = savedKey;
         }
-      } catch (err) {
-        output.innerText = "فشل الاتصال بالخادم: " + err.message;
-      } finally {
-        btn.disabled = false;
-      }
+    });
+
+    async function analyzeNews() {
+        const apiKeyInput = document.getElementById('apiKey').value.trim();
+        const newsInput = document.getElementById('newsInput').value.trim();
+        const resultDiv = document.getElementById('resultContent');
+        const resultsCard = document.getElementById('resultsCard');
+        const loadingDiv = document.getElementById('loading');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (!newsInput) {
+            alert('يرجى إدخال نص الخبر أولاً');
+            return;
+        }
+
+        const apiKey = apiKeyInput || localStorage.getItem('gemini_api_key') || '';
+        if (!apiKey) {
+            alert('يرجى إدخال مفتاح API الخاص بـ Gemini');
+            return;
+        }
+
+        // حفظ المفتاح محلياً للتسهيل
+        localStorage.setItem('gemini_api_key', apiKey);
+
+        submitBtn.disabled = true;
+        loadingDiv.style.display = 'block';
+        resultsCard.style.display = 'none';
+
+        const mediaPrompt = `أنت صحفي ومحرر إعلامي محترف. وظيفتك الوحيدة هي: البحث عن الزاوية المفقودة (الفجوة الإعلامية) في الخبر المرفق، وصياغة "خبر صحفي جديد بالكامل" يغطي تلك الزاوية، ليصبح جاهزاً للنشر فوراً.
+
+⚠️ تنبيه صارم: يمنع منعاً باتاً شرح معاني الكلمات، أو القيام بتحليل لغوي، أو تفكيك بلاغي للنص.
+
+قم بتنسيق المخرجات مباشرة بالشكل التالي:
+
+1️⃣ **الفجوة الإعلامية المكتشفة:**
+(سطران يوضحان الجانب الذي أغفلت وسائل الإعلام الأخرى تغطيته في هذا الخبر).
+
+2️⃣ **عنوان الخبر الجديد (جاهز للنشر):**
+(عنوان صحفي جذاب ومباشر يركز على الزاوية المفقودة).
+
+3️⃣ **نص الخبر الصحفي الجديد (جاهز للنشر فوراً):**
+(اكتب خبراً صحفياً كاملاً ومكتمل الأركان: مقدمة إخبارية، تفاصيل وأبعاد التغطية المنفردة، وخاتمة. صغ النص بأسلوب إعلامي رصين جاهز للنسخ والنشر مباشرة).
+
+النص المراد تحليله واستخراج الخبر منه:
+` + newsInput;
+
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ text: mediaPrompt }]
+                    }]
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.candidates && data.candidates[0].content.parts[0].text) {
+                const text = data.candidates[0].content.parts[0].text;
+                resultDiv.innerHTML = typeof marked !== 'undefined' ? marked.parse(text) : text.replace(/\n/g, '<br>');
+                resultsCard.style.display = 'block';
+            } else {
+                alert('حدث خطأ أثناء معالجة الطلب، يرجى التأكد من صحة مفتاح الـ API.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('تعذر الاتصال بالخدمة. يرجى مراجعة الاتصال بالإنترنت ومفتاح API.');
+        } finally {
+            submitBtn.disabled = false;
+            loadingDiv.style.display = 'none';
+        }
     }
-  </script>
+</script>
+
 </body>
 </html>
