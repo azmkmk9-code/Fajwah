@@ -198,8 +198,7 @@
 </div>
 
 <script>
-    // ⬇️ ألصق مفتاح الـ API الخاص بك هنا بين العلامتين ⬇️
-    const GEMINI_API_KEY = "ضع_مفتاحك_هنا";
+    const GEMINI_API_KEY = "AQ.Ab8RN6Lt9CIrheDCS91zC4hD0WxsjNMUCwBAkzPMS06dYeKosA";
 
     async function analyzeNews() {
         const newsInput = document.getElementById('newsInput').value.trim();
@@ -210,11 +209,6 @@
 
         if (!newsInput) {
             alert('يرجى إدخال نص الخبر أولاً');
-            return;
-        }
-
-        if (!GEMINI_API_KEY || GEMINI_API_KEY === "ضع_مفتاحك_هنا") {
-            alert('يرجى استبدال "ضع_مفتاحك_هنا" بمفتاح API الخاص بك داخل ملف index.html');
             return;
         }
 
