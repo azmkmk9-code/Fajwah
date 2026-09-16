@@ -29,16 +29,16 @@
   <div class="container">
     <div class="header">
       <h1>منصة فجوة (Fajwah AI)</h1>
-      <p class="subtitle">أداة الذكاء الاصطناعي للتحليل الإعلامي والمحتوى الرقمي</p>
+      <p class="subtitle">استكشاف الفجوات الإعلامية والانفراد بالمحتوى الرقمي</p>
     </div>
     
     <div class="card">
-      <label for="userInput">أدخل المحتوى الإعلامي أو النص للتحليل:</label>
-      <textarea id="userInput" placeholder="اكتب أو ألصق النص الإعلامي، الخبر، أو المقال هنا..."></textarea>
-      <button id="sendBtn" onclick="analyzeContent()">تحليل المحتوى</button>
+      <label for="userInput">أدخل الخبر أو المحتوى الإعلامي لاستخراج الفجوات:</label>
+      <textarea id="userInput" placeholder="ألصق نص الخبر أو التصريح الإعلامي هنا..."></textarea>
+      <button id="sendBtn" onclick="analyzeContent()">استخراج الفجوة الإعلامية</button>
       
-      <span class="result-title">نتيجة التحليل الإعلامي:</span>
-      <div id="output" class="result-box">في انتظار إدخال النص لبدء التحليل...</div>
+      <span class="result-title">تقرير الفجوة والزوايا المفقودة:</span>
+      <div id="output" class="result-box">في انتظار إدخال الخبر لبدء استخراج الفجوات...</div>
     </div>
   </div>
 
@@ -51,20 +51,39 @@
       const btn = document.getElementById("sendBtn");
 
       if (!input) {
-        alert("الرجاء أدخل نصاً تحليلياً أولاً!");
+        alert("الرجاء إدخال نص الخبر أولاً!");
         return;
       }
 
-      output.innerHTML = '<div class="loading">جاري تحليل المحتوى بواسطة الذكاء الاصطناعي... ⏳</div>';
+      output.innerHTML = '<div class="loading">جاري التفتيش عن الفجوات الإعلامية والزوايا المفقودة... ⏳</div>';
       btn.disabled = true;
+
+      const mediaPrompt = `أنت خبير ومحلل إعلامي متخصص في رصد "الفجوات الإعلامية". 
+مهمتك ليست إعادة شرح النص أو تحليل بلاغته، بل استخراج ما أغفلته وسائل الإعلام وتزويد الباحث/صانع المحتوى بزوايا انفراد جاهزة للنشر.
+
+قم بتحليل النص التالي واستخرج ما يلي مباشرة:
+
+1. 🎯 **الفجوة الإعلامية (ما الذي أغفلته وسائل الإعلام؟):**
+- الزوايا الغائبة (سياقية، تاريخية، أبعاد سياسية أو اقتصادية أو اجتماعية لم تطرح).
+- النقاط التفصيلية التي تتجاهل التغطيات السائدة التركيز عليها.
+
+2. ❓ **الأسئلة المعلقة:**
+- الأسئلة الجوهرية التي يطرحها المتابع بعد قراءة الخبر ولم تجب عنها التغطية.
+
+3. 💡 **زوايا معالجة مقترحة للانفراد (Content Angles):**
+- 3 زوايا صحفية أو أفكار صانع محتوى متميزة تغطي هذه الفجوة وتصنع فارقاً عند نشرها.
+
+4. ✍️ **عناوين مقترحة للنشر:**
+- 3 عناوين جذابة وقوية تبدأ من الفجوة الإعلامية مباشرة لتغطية الموضوع من منظور جديد.
+
+النص المراد تحليله:
+` + input;
 
       try {
         const response = await fetch(WORKER_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            prompt: "قم بتحليل المحتوى الإعلامي التالي تحليلاً دقيقاً من حيث الصياغة، التوجه، والفجوات الإعلامية:\n\n" + input 
-          })
+          body: JSON.stringify({ prompt: mediaPrompt })
         });
 
         const data = await response.json();
